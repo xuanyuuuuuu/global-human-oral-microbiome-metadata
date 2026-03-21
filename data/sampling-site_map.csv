@@ -1,0 +1,31 @@
+main_category,subcategory,terms,ambiguous_flag,include_flag
+Oral Fluids,Saliva,saliva; spit; stimulated saliva; unstimulated saliva; whole saliva,0,1
+Oral Fluids,Saliva,oral fluid; mouth fluid; oral secretion; mouthwash; oral rinse; oral wash; mouth rinse,1,1
+Oral Fluids,Gingival crevicular fluid (GCF),gingival crevicular fluid; crevicular fluid; gcf,0,1
+Oral Fluids,Gingival crevicular fluid (GCF),sulcus fluid; gingival exudate; gingival sulcus;  gingival fluid; gingival groove,1,1
+Oral Mucosa and Surfaces,Buccal mucosa,buccal; buccal mucosa; buccal swab; cheek; inner cheek; cheek swab,0,1
+Oral Mucosa and Surfaces,Buccal mucosa,oral mucosa of cheek wall,1,1
+Oral Mucosa and Surfaces,Palatal mucosa,palatal mucosa; hard palate; soft palate; palate; palatal swab,0,1
+Oral Mucosa and Surfaces,Sublingual mucosa,sublingual mucosa; floor of mouth; sublingual region; underside of tongue; ventral tongue,0,1
+Oral Mucosa and Surfaces,Sublingual mucosa,ventral oral mucosa,1,1
+Oral Mucosa and Surfaces,Oral mucosa (unspecified),oral mucosa; mucosal swab; mucosal surface not further specified; mucosa; mouth mucosa,0,1
+Oral Mucosa and Surfaces,Oral mucosa (unspecified),oral surface; gingival margin; gingiva,1,1
+Oral Mucosa and Surfaces,Tongue dorsum,tongue dorsum; dorsal tongue; tongue coating; dorsal tongue surface; posterior tongue coating; tougue coating,0,1
+Oral Mucosa and Surfaces,Tongue dorsum,tongue; tongue surface; tongue swab; tounge swab,1,1
+Dental Plaque and Calculus,Supragingival dental plaque,supragingival plaque; supraginigval plaque; supragingival biofilm; plaque on tooth surface; dental biofilm above gum line; above gingival margin,0,1
+Dental Plaque and Calculus,Supragingival dental plaque,dental enamel; enamel surface; tooth surface,1,1
+Dental Plaque and Calculus,Subgingival dental plaque,subgingival plaque; subgingival biofilm; periodontal pocket; periodontal pocket plaque; human periodontal pocket; human peridontal picket; periodontal picket; plaque below gum line; root surface plaque,0,1
+Dental Plaque and Calculus,Subgingival dental plaque,gum,1,1
+Dental Plaque and Calculus,Dental plaque (unspecified),plaque; dental plaque; plaque sample; tooth plaque; mixed plaque sample,0,1
+Dental Plaque and Calculus,Dental plaque (unspecified),biofilm; biofilm sample,1,1
+Dental Plaque and Calculus,Dental calculus,dental calculus; calculus; calculus sample; tartar; tooth calculus,0,1
+Dental Plaque and Calculus,Dental calculus,black tooth stain plaque; stain plaque,1,1
+Special/Lesion Sites,Carious lesion,carious lesion; carious lesion (dentine); carious dentine; caries sample; carious,0,1
+Special/Lesion Sites,Carious lesion,dentine sample,1,1
+Special/Lesion Sites,Periapical lesion,apical lesion; periapical lesion; periodontal granulation tissue,0,1
+Special/Lesion Sites,Periapical lesion,tooth root; root tip; tooth apex,1,1
+Special/Lesion Sites,Dental pulp,dental pulp; extracted tooth pulp; pulp; tooth pulp; pulp chamber,0,1
+Special/Lesion Sites,Dental pulp,root canal; root canal contents,1,1
+Unspecified,Oral cavity (unspecified),oral cavity; oral sample; mouth; oral; oral bacterial film; oral biofilm; oral cavity; oral sample; oral site; oral unspecified; whole mouth; tooth; teeth; dental; denture,0,1
+Oropharyngeal region,Oropharyngeal / Nasopharyngeal region,Oropharyngeal; airway; bronchial; nasal cavity; nasopharynx; nose; oro-pharynx; oropharynx; pharynx; respiratory tract; throat; tonsil; tonsillar; uvula,0,0
+Oropharyngeal region,Sputum / Airway / Lung,airway lavage; bronchial brushing; bronchoalveolar lavage; lung; respiratory swab; respiratory tract sample; sputum; trachea,0,0
