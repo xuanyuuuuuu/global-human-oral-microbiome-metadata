@@ -1,0 +1,20 @@
+# Data (do NOT track large or raw data)
+data/raw/
+data/intermediate/
+data/*.csv
+data/*.tsv
+data/*.xlsx
+
+# Outputs
+output/
+figures/output/
+
+# R / Python
+.Rhistory
+.RData
+__pycache__/
+*.pyc
+
+# OS junk
+.DS_Store
+Thumbs.db
