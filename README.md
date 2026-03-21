@@ -1,47 +1,32 @@
-# Global inequities of the human oral microbiome
+# Global human oral microbiome metadata  
 
-This repository contains code and derived data files used to analyse global representation patterns of human oral microbiome samples.
-
-The materials are organised to reflect the analytical workflow and figure groupings described in the manuscript. 
-Large intermediate files and raw sequencing data are not included.
+Metadata harmonisation and integration pipeline for analysing global representation patterns of human oral microbiome samples.  
 
 ---
 
-## Contents
+## Overview  
 
-### Code
+This repository contains code and processed metadata used to analyse global inequities in human oral microbiome research.  
 
-- `python/`  
-  Python scripts used for metadata inspection, harmonisation, filtering, and quantitative analyses. 
-  All method-level calculations reported in the manuscript are performed in Python.
-
-- `R/`  
-  R scripts used exclusively for figure generation and visualisation.
-  No analytical or statistical calculations are implemented in R.
+The project focuses on large-scale integration and standardisation of publicly available metadata (NCBI BioSample Database), enabling consistent downstream analyses of geographic, sampling-site, and temporal patterns.  
 
 ---
 
-### Data
+## Pipeline overview  
 
-- `data/`  
-  Derived, analysis-ready metadata tables used as inputs for figures and summary tables in the manuscript.
+The analysis consists of two main stages:  
 
-  These files include sample-level metadata (BioSample-based), country- and region-level mapping tables, and harmonisation reference tables.
+1. **Harmonization (the `harmonization/` directory)**  
+   - Standardising attributes and values across datasets   
+   - Cleaning and filtering sample records  
+   - Linking sequencing data  
 
-  Raw sequencing reads, run-level metadata (e.g. SRR accessions), and large intermediate processing files are not included.
-
----
-
-## Figure organisation
-
-R scripts are grouped according to the major figure sections in the manuscript:
-
-- **Global human oral microbiome representation**
-- **Global temporal patterns of human oral microbiome samples**
-- **Sampling-site composition, temporal trends, and regional patterns of human oral microbiome samples**
+2. **Visualization (the `visualization/` directory)**  
+   - Producing figures and tables used in the manuscript  
 
 ---
 
-## Notes
+## Data
 
-- The unit of analysis throughout this study is the BioSample.
+- The `data/` directory contains processed metadata tables used in the analysis  
+- Raw data are not included and can be accessed from the NCBI BioSample database  
