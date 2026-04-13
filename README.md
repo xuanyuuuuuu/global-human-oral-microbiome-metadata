@@ -1,32 +1,152 @@
-# Global human oral microbiome metadata  
+# Global-human-oral-microbiome-metadata
 
-Metadata harmonization and integration pipeline for analysing global representation patterns of human oral microbiome samples.  
+# Harmonization workflow 
 
----
+## Overview
 
-## Overview  
-
-This repository contains code and processed metadata used to analyse global inequities in human oral microbiome research.  
-
-The project focuses on large-scale integration and standardization of publicly available metadata (NCBI BioSample Database), enabling consistent downstream analyses of geographic, sampling-site, and temporal patterns.  
+XML → attributes → values → filtering → runinfo → linking → final dataset
 
 ---
 
-## Pipeline overview  
+## Raw data
 
-The analysis consists of two main stages:  
+The analysis started from four raw XML files downloaded from the NCBI BioSample database.
 
-1. **Harmonization (the `harmonization/` directory)**  
-   - Standardizing attributes and values across datasets   
-   - Cleaning and filtering sample records  
-   - Linking sequencing data  
+Four taxonomy categories were used:
+- human oral metagenome (txid447426)
+- human saliva metagenome (txid1679718)
+- oral metagenome (txid646099)
+- human metagenome (txid1227552)
 
-2. **Visualization (the `visualization/` directory)**  
-   - Producing figures and tables used in the manuscript  
+Query:
+txidXXXXXXX[organism:exp] AND public[filter] AND biosample sra[filter] AND ("2011/01/01"[PDAT] : "2025/12/31"[PDAT])
+
+Files:
+- human_biosample.xml
+- oral_biosample.xml
+- human_oral_biosample.xml
+- human_saliva_biosample.xml
 
 ---
 
-## Data
+## Step 1: Attribute extraction
 
-- The `data/` directory contains processed metadata tables used in the analysis  
-- Raw data are not included and can be accessed from the NCBI BioSample Database  
+Extract and count all attribute names from XML.
+
+Script:
+- attributes_count.py
+
+Input:
+- *_biosample.xml
+
+Output:
+- attribute_counts.csv
+
+Select relevant attribute names for country, host and sampling type. (Corresponding to Appendix Tables 1 in manuscript)
+
+---
+
+## Step 2: Attribute harmonization
+
+Extract standardized fields from XML.
+
+Script:
+- attributes_unify.py
+
+Input:
+- *_biosample.xml
+
+Output:
+- *_biosample.csv (accession, country, sampling_type, host)
+
+---
+
+## Step 3: Value extraction
+
+Check raw value distributions.
+
+Script:
+- value_count.py
+
+Input:
+- *_biosample.csv
+
+Output:
+- country_value_count.csv
+- samplingsite_value_count.csv
+- host_value_count.csv
+
+Create mapping dictionaries for country, host and sampling type. (Corresponding to Appendix Tables 2–4 in manuscript)
+- country_map.csv
+- host_map.csv
+- sampling-type_map.csv
+
+---
+
+## Step 4: Value harmonization
+
+Standardize values using mapping dictionaries.
+
+Script:
+- value_unify.py
+
+Input:
+- *_biosample.csv
+- country_map.csv
+- host_map.csv
+- sampling-site_map.csv
+
+Output:
+- clean_*.csv
+
+---
+
+## Step 5: Filtering
+
+Filter BioSamples based on site and host.
+
+Script:
+- filter.py
+
+Input:
+- clean_*.csv
+
+Output:
+- merged_filtered_biosample.csv
+
+---
+
+## Step 6: Run metadata retrieval
+
+Retrieve sequencing metadata using ENA API.
+
+Script:
+- runinfo.py
+
+Input:
+- merged_filtered_biosample.csv
+
+Output:
+- runmeta_all_runs.csv.gz
+
+---
+
+## Step 7: Linking
+
+Link BioSample metadata with run-level metadata.
+
+Script:
+- link.py
+
+Input:
+- merged_filtered_biosample.csv
+- runmeta_all_runs.csv.gz
+
+Output:
+- final_biosample.csv
+
+
+# Visualization workflow
+
+## Overview
+
