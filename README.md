@@ -1,14 +1,14 @@
 # Global-human-oral-microbiome-metadata
 
-# Harmonization workflow 
+## Harmonization workflow 
 
-## Overview
+### Overview
 
 XML → attributes → values → filtering → runinfo → linking → final dataset
 
 ---
 
-## Raw data
+### Raw data
 
 The analysis started from four raw XML files downloaded from the NCBI BioSample database.
 
@@ -21,6 +21,8 @@ Four taxonomy categories were used:
 Query:
 txidXXXXXXX[organism:exp] AND public[filter] AND biosample sra[filter] AND ("2011/01/01"[PDAT] : "2025/12/31"[PDAT])
 
+Download format: Full XML (text)
+
 Files:
 - human_biosample.xml
 - oral_biosample.xml
@@ -29,7 +31,7 @@ Files:
 
 ---
 
-## Step 1: Attribute extraction
+### Step 1: Attribute extraction
 
 Extract and count all attribute names from XML.
 
@@ -46,7 +48,7 @@ Select relevant attribute names for country, host and sampling type. (Correspond
 
 ---
 
-## Step 2: Attribute harmonization
+### Step 2: Attribute harmonization
 
 Extract standardized fields from XML.
 
@@ -57,11 +59,20 @@ Input:
 - *_biosample.xml
 
 Output:
-- *_biosample.csv (accession, country, sampling_type, host)
+- human_biosample.csv
+- oral_biosample.csv
+- human_oral_biosample.csv
+- human_saliva_biosample.csv
+
+Output columns:
+- accession
+- country
+- host
+- sampling_type
 
 ---
 
-## Step 3: Value extraction
+### Step 3: Value extraction
 
 Check raw value distributions.
 
@@ -73,17 +84,19 @@ Input:
 
 Output:
 - country_value_count.csv
-- samplingsite_value_count.csv
+- sampling_type_value_count.csv
 - host_value_count.csv
 
-Create mapping dictionaries for country, host and sampling type. (Corresponding to Appendix Tables 2–4 in manuscript)
+These summaries were used to construct mapping dictionaries for value harmonization (Appendix Tables 2–4 in the manuscript).
+
+Mapping files:
 - country_map.csv
 - host_map.csv
 - sampling-type_map.csv
 
 ---
 
-## Step 4: Value harmonization
+### Step 4: Value harmonization
 
 Standardize values using mapping dictionaries.
 
@@ -94,16 +107,19 @@ Input:
 - *_biosample.csv
 - country_map.csv
 - host_map.csv
-- sampling-site_map.csv
+- sampling_type_map.csv
 
 Output:
-- clean_*.csv
+- clean_human_biosample.csv
+- clean_oral_biosample.csv
+- clean_human_oral_biosample.csv
+- clean_human_saliva_biosample.csv
 
 ---
 
-## Step 5: Filtering
+### Step 5: Filtering and merging
 
-Filter BioSamples based on site and host.
+Filter BioSamples based on site and host and merge.
 
 Script:
 - filter.py
@@ -116,7 +132,7 @@ Output:
 
 ---
 
-## Step 6: Run metadata retrieval
+### Step 6: Run metadata retrieval
 
 Retrieve sequencing metadata using ENA API.
 
@@ -127,11 +143,11 @@ Input:
 - merged_filtered_biosample.csv
 
 Output:
-- runmeta_all_runs.csv.gz
+- runmeta_all_runs.csv
 
 ---
 
-## Step 7: Linking
+### Step 7: Linking
 
 Link BioSample metadata with run-level metadata.
 
@@ -144,9 +160,4 @@ Input:
 
 Output:
 - final_biosample.csv
-
-
-# Visualization workflow
-
-## Overview
 
