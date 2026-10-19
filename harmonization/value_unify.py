@@ -34,7 +34,7 @@ def load_host_map(path: str):
     return term2cat
 
 
-def load_site_map(path: str):
+def load_type_map(path: str):
     df = pd.read_csv(path)
     exact_map = {}
     contains_list = []
@@ -60,7 +60,7 @@ def load_site_map(path: str):
     return exact_map, contains_list
 
 
-def map_site(value_raw, exact_map, contains_list):
+def map_type(value_raw, exact_map, contains_list):
     if is_blank(value_raw):
         return ("Unknown", "Unknown", 0, 2)
 
@@ -147,16 +147,16 @@ def export_unmatched(raw_series: pd.Series, clean_series: pd.Series, out_path: P
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Harmonize raw country / sampling-site / host values using mapping CSV files"
+        description="Harmonize raw country / sampling_type / host values using mapping CSV files"
     )
-    parser.add_argument("--input", required=True, help="Input raw CSV (accession, country, sampling-site, host)")
+    parser.add_argument("--input", required=True, help="Input raw CSV (accession, country, sampling_type, host)")
     parser.add_argument("--country_map", required=True, help="country_map.csv")
     parser.add_argument("--host_map", required=True, help="host_map.csv")
-    parser.add_argument("--site_map", required=True, help="sampling-site_map.csv")
+    parser.add_argument("--type_map", required=True, help="sampling_type_map.csv")
     parser.add_argument("--outdir", required=True, help="Output directory")
     args = parser.parse_args()
 
-    for p in [args.input, args.country_map, args.host_map, args.site_map]:
+    for p in [args.input, args.country_map, args.host_map, args.type_map]:
         if not os.path.isfile(p):
             sys.exit(f"File not found: {p}")
 
@@ -165,13 +165,13 @@ def main():
 
     df = pd.read_csv(args.input)
 
-    expected_cols = ["accession", "country", "sampling-site", "host"]
+    expected_cols = ["accession", "country", "sampling_type", "host"]
     for col in expected_cols:
         if col not in df.columns:
             sys.exit(f"Missing required column: {col}")
 
     host_term2cat = load_host_map(args.host_map)
-    site_exact, site_contains = load_site_map(args.site_map)
+    type_exact, type_contains = load_type_map(args.type_map)
     country_exact, country_long, country_short = load_country_map(args.country_map)
 
     # Host clean
@@ -203,19 +203,19 @@ def main():
 
     df["host_clean"] = host_clean
 
-    # Site clean
-    site_main, site_sub, site_amb, site_inc = [], [], [], []
-    for v in df["sampling-site"]:
-        main_cat, sub_cat, amb, inc = map_site(v, site_exact, site_contains)
-        site_main.append(main_cat)
-        site_sub.append(sub_cat)
-        site_amb.append(int(amb))
-        site_inc.append(int(inc))
+    # Type clean
+    type_main, type_sub, type_amb, type_inc = [], [], [], []
+    for v in df["sampling_type"]:
+        main_cat, sub_cat, amb, inc = map_type(v, type_exact, type_contains)
+        type_main.append(main_cat)
+        type_sub.append(sub_cat)
+        type_amb.append(int(amb))
+        type_inc.append(int(inc))
 
-    df["sampling_site_main_category"] = site_main
-    df["sampling_site_subcategory"] = site_sub
-    df["sampling_site_ambiguous_flag"] = site_amb
-    df["sampling_site_include_flag"] = site_inc
+    df["sampling_type_main_category"] = type_main
+    df["sampling_type_subcategory"] = type_sub
+    df["sampling_type_ambiguous_flag"] = type_amb
+    df["sampling_type_include_flag"] = type_inc
 
     # Country clean
     country_clean, iso3 = [], []
@@ -233,10 +233,10 @@ def main():
         "country",
         "country_clean",
         "iso3",
-        "sampling_site_main_category",
-        "sampling_site_subcategory",
-        "sampling_site_ambiguous_flag",
-        "sampling_site_include_flag",
+        "sampling_type_main_category",
+        "sampling_type_subcategory",
+        "sampling_type_ambiguous_flag",
+        "sampling_type_include_flag",
         "host",
         "host_clean",
     ]
@@ -249,7 +249,7 @@ def main():
 
     # Unmatched exports
     export_unmatched(df["country"], df["country_clean"], outdir / f"unmatched_country_{input_stem}.csv")
-    export_unmatched(df["sampling-site"], df["sampling_site_subcategory"], outdir / f"unmatched_sampling-site_{input_stem}.csv")
+    export_unmatched(df["sampling_type"], df["sampling_type_subcategory"], outdir / f"unmatched_sampling_type_{input_stem}.csv")
     export_unmatched(df["host"], df["host_clean"], outdir / f"unmatched_host_{input_stem}.csv")
 
     print("Saved unmatched files.")

@@ -13,13 +13,14 @@ import requests
 ENA_SEARCH_URL = "https://www.ebi.ac.uk/ena/portal/api/search"
 
 ENA_FIELDS = [
+    "run_accession",
     "sample_accession",
     "study_accession",
     "first_public",
     "last_updated",
     "library_strategy",
     "library_source",
-    "instrument_platform",
+    "library_layout",
     "instrument_model",
 ]
 
@@ -216,6 +217,22 @@ def main():
         [read_csv_gz(os.path.join(batch_dir, f)) for f in os.listdir(batch_dir)],
         ignore_index=True
     )
+    merged = merged.rename(columns={
+        "first_public": "release_date",
+        "last_updated": "load_date",
+    })
+    final_cols = [
+        "run_accession",
+        "sample_accession",
+        "study_accession",
+        "release_date",
+        "load_date",
+        "library_strategy",
+        "library_source",
+        "library_layout",
+        "instrument_model",
+    ]
+    merged = merged[final_cols]
     merged_out = os.path.join(args.outdir, "runmeta_all_runs.csv.gz")
     write_csv_gz(merged, merged_out)
     log_line(log_path, f"Merged rows: {len(merged)}")

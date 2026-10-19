@@ -28,7 +28,7 @@ def count_values(series: pd.Series, value_label: str) -> pd.DataFrame:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Count raw value frequencies for country and sampling site columns"
+        description="Count raw value frequencies for country and sampling type columns"
     )
     parser.add_argument(
         "--input",
@@ -41,9 +41,9 @@ def main():
         help="Column name for country (default: country)"
     )
     parser.add_argument(
-        "--site_col",
-        default="sampling_site",
-        help="Column name for sampling site (default: sampling_site)"
+        "--type_col",
+        default="sampling_type",
+        help="Column name for sampling type (default: sampling_type)"
     )
     parser.add_argument(
         "--outdir",
@@ -58,13 +58,13 @@ def main():
     os.makedirs(args.outdir, exist_ok=True)
 
     df_head = pd.read_csv(args.input, nrows=0)
-    for col in [args.country_col, args.site_col]:
+    for col in [args.country_col, args.type_col]:
         if col not in df_head.columns:
             sys.exit(f"Missing required column: {col}")
 
     df = pd.read_csv(
         args.input,
-        usecols=[args.country_col, args.site_col],
+        usecols=[args.country_col, args.type_col],
         dtype="object",
         low_memory=True,
     )
@@ -74,10 +74,10 @@ def main():
     country_df.to_csv(country_out, index=False)
     print(f"Saved: {country_out} ({len(country_df)} rows)")
 
-    site_df = count_values(df[args.site_col], "raw_site_name")
-    site_out = os.path.join(args.outdir, "samplingsite_value_count.csv")
-    site_df.to_csv(site_out, index=False)
-    print(f"Saved: {site_out} ({len(site_df)} rows)")
+    type_df = count_values(df[args.type_col], "raw_type_name")
+    type_out = os.path.join(args.outdir, "sampling_type_value_count.csv")
+    type_df.to_csv(type_out, index=False)
+    print(f"Saved: {type_out} ({len(type_df)} rows)")
 
     print("Done: NaN kept as NaN; empty strings converted to 'blank'.")
 

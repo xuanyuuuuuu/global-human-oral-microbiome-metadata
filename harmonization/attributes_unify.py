@@ -4,7 +4,7 @@ import pandas as pd
 import os
 import sys
 
-SAMPLING_SITE_FIELDS = [
+SAMPLING_TYPE_FIELDS = [
     "isolation_source",
     "sample_type",
     "sample_label",
@@ -49,7 +49,7 @@ def pick_first_value(biosample, field_list):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Extract and unify country, sampling-site, and host from a BioSample XML file"
+        description="Extract and unify country, sampling-type, and host from a BioSample XML file"
     )
     parser.add_argument(
         "--xml",
@@ -75,7 +75,7 @@ def main():
         rows.append({
             "accession": biosample.get("accession"),
             "country": pick_first_value(biosample, COUNTRY_FIELDS),
-            "sampling_site": pick_first_value(biosample, SAMPLING_SITE_FIELDS),
+            "sampling_type": pick_first_value(biosample, SAMPLING_TYPE_FIELDS),
             "host": pick_first_value(biosample, HOST_FIELDS),
         })
 

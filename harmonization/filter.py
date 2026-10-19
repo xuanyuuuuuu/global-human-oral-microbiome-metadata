@@ -37,13 +37,13 @@ def main():
     }
 
 
-    KEEP_UNKNOWN_SITE_DATASETS = {
+    KEEP_UNKNOWN_TYPE_DATASETS = {
         "clean_human_oral_biosample",
         "clean_human_saliva_biosample",
         "clean_oral_biosample",
     }
 
-    required_cols = ["sampling_site_include_flag", "host_clean"]
+    required_cols = ["sampling_type_include_flag", "host_clean"]
 
     filtered_dfs = []
     summary_rows = []
@@ -54,7 +54,7 @@ def main():
         ensure_cols(df0, required_cols, name)
         n_start = len(df0)
 
-        mask_non_oral = df0["sampling_site_include_flag"] == 0
+        mask_non_oral = df0["sampling_type_include_flag"] == 0
         n_non_oral_removed = int(mask_non_oral.sum())
         df1 = df0.loc[~mask_non_oral].copy()
 
@@ -66,11 +66,11 @@ def main():
         n_non_human_removed = int(mask_non_human.sum())
         df2 = df1.loc[~mask_non_human].copy()
 
-        n_unknown_site_removed = 0
-        if name not in KEEP_UNKNOWN_SITE_DATASETS:
-            mask_unknown_site = df2["sampling_site_include_flag"] == 2
-            n_unknown_site_removed = int(mask_unknown_site.sum())
-            df3 = df2.loc[~mask_unknown_site].copy()
+        n_unknown_type_removed = 0
+        if name not in KEEP_UNKNOWN_TYPE_DATASETS:
+            mask_unknown_type = df2["sampling_type_include_flag"] == 2
+            n_unknown_type_removed = int(mask_unknown_type.sum())
+            df3 = df2.loc[~mask_unknown_type].copy()
         else:
             df3 = df2
 
@@ -83,10 +83,10 @@ def main():
         print(f"  Start: {n_start}")
         print(f"  Removed non-oral (include=0): {n_non_oral_removed}")
         print(f"  Removed non-human: {n_non_human_removed}")
-        if name not in KEEP_UNKNOWN_SITE_DATASETS:
-            print(f"  Removed unknown site (include=2): {n_unknown_site_removed}")
+        if name not in KEEP_UNKNOWN_TYPE_DATASETS:
+            print(f"  Removed unknown type (include=2): {n_unknown_type_removed}")
         else:
-            print("  Removed unknown site (include=2): 0  (kept for this subset)")
+            print("  Removed unknown type (include=2): 0  (kept for this subset)")
         print(f"  Total removed: {n_total_removed}")
         print(f"  Final kept: {n_final}")
 
@@ -95,7 +95,7 @@ def main():
             "start_n": int(n_start),
             "removed_non_oral_include0": int(n_non_oral_removed),
             "removed_non_human": int(n_non_human_removed),
-            "removed_unknown_site_include2": int(n_unknown_site_removed),
+            "removed_unknown_type_include2": int(n_unknown_type_removed),
             "total_removed": int(n_total_removed),
             "final_n": int(n_final),
         })
@@ -113,7 +113,7 @@ def main():
     merged_path = os.path.join(args.outdir, "merged_filtered_biosample.csv")
     merged_df.to_csv(merged_path, index=False)
     print("\n=== Final merged dataset ===")
-    print(f"Total remaining biosamples (no deduplication): {len(merged_df)}")
+    print(f"Total remaining biosamples: {len(merged_df)}")
     print(f"Saved merged: {merged_path}")
 
 

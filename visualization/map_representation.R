@@ -1,4 +1,10 @@
-args <- commandArgs(trailingOnly = TRUE)
+# ============================================
+# Figure 1B: Representation map
+# ============================================
+
+if (!exists("args")) {
+  args <- commandArgs(trailingOnly = TRUE)
+}
 
 get_arg <- function(k) {
   i <- which(args == k)
@@ -21,30 +27,50 @@ suppressPackageStartupMessages({
 
 sf::sf_use_s2(FALSE)
 
+# --------------------------------------------
+# Load data
+# --------------------------------------------
 raw <- read_csv(infile, show_col_types = FALSE)
 
-if ("sample_countl" %in% names(raw)) raw <- raw |> rename(Samples = sample_countl)
+# ------------------------------
+# Column handling
+# ------------------------------
 if ("sample_count" %in% names(raw)) raw <- raw |> rename(Samples = sample_count)
 if (!("Samples" %in% names(raw))) stop("Samples missing")
 
-if (!("log10_representation_proportion" %in% names(raw))) stop("log10_representation_proportion missing")
-
-if (!("ISO3" %in% names(raw))) {
-  if ("iso3" %in% names(raw)) raw <- raw |> rename(ISO3 = iso3)
-  else stop("ISO3 missing")
-}
+if (!("iso3" %in% names(raw))) stop("iso3 missing")
+raw <- raw |> rename(ISO3 = iso3)
 
 if (!("Country" %in% names(raw))) {
   if ("country_clean" %in% names(raw)) raw <- raw |> rename(Country = country_clean)
-  else if ("country" %in% names(raw)) raw <- raw |> rename(Country = country)
 }
 
+# ------------------------------
+# Compute log10(RP)
+# ------------------------------
+if (!("Representation Proportion" %in% names(raw))) {
+  stop("Representation Proportion missing")
+}
+
+raw <- raw |> mutate(
+  log10_representation_proportion = log10(`Representation Proportion`)
+)
+
+# ------------------------------
+# Filter small samples
+# ------------------------------
 raw <- raw |> filter(is.na(Samples) | Samples > 50)
 
-df <- raw |> mutate(Index_log = as.numeric(log10_representation_proportion))
+df <- raw |> mutate(
+  Index_log = as.numeric(log10_representation_proportion)
+)
 
+# ------------------------------
+# Scaling
+# ------------------------------
 pos_max <- suppressWarnings(max(df$Index_log[df$Index_log > 0], na.rm = TRUE))
 neg_max <- suppressWarnings(max(abs(df$Index_log[df$Index_log < 0]), na.rm = TRUE))
+
 if (!is.finite(pos_max) || pos_max <= 0) pos_max <- 1
 if (!is.finite(neg_max) || neg_max <= 0) neg_max <- 1
 
@@ -56,14 +82,15 @@ df <- df |> mutate(
   )
 )
 
+# --------------------------------------------
+# Map
+# --------------------------------------------
 world <- rnaturalearth::ne_countries(
   scale = "medium", type = "map_units", returnclass = "sf"
 ) |>
   st_make_valid() |>
   st_transform("+proj=eqearth") |>
-  filter(!name_long %in% c(
-    "Antarctica"
-  ))
+  filter(!name_long %in% c("Antarctica"))
 
 grats <- st_graticule(
   lon = seq(-180, 180, 20),
@@ -76,6 +103,9 @@ world_rep <- world |>
     by = c("iso_a3" = "ISO3")
   )
 
+# --------------------------------------------
+# Colors
+# --------------------------------------------
 neg_cols <- colorRampPalette(c("#542788", "#E9E1FB"))(256)
 pos_cols <- colorRampPalette(c("#F9DCD4", "#B2182B"))(256)
 cols <- c(neg_cols, pos_cols)
@@ -90,6 +120,9 @@ na_   <- world_rep |> filter(is.na(Representation_index_scaled))
 zero  <- world_rep |> filter(!is.na(Representation_index_scaled) & Representation_index_scaled == 0)
 withv <- world_rep |> filter(!is.na(Representation_index_scaled) & Representation_index_scaled != 0)
 
+# --------------------------------------------
+# Plot
+# --------------------------------------------
 p <- ggplot() +
   geom_sf(data = grats, color = "grey85", linewidth = 0.2) +
   geom_sf(data = na_,   fill = "#2E2C8A", color = "white", linewidth = 0.25) +
@@ -121,10 +154,15 @@ p <- ggplot() +
     plot.margin  = margin(6, 6, 6, 6)
   )
 
+# --------------------------------------------
+# Save
+# --------------------------------------------
 dir.create(dirname(outfile), showWarnings = FALSE, recursive = TRUE)
 
-if (grepl("\\.svg$", outfile, ignore.case = TRUE) && requireNamespace("svglite", quietly = TRUE)) {
-  ggsave(outfile, p, width = 180, height = 120, units = "mm", device = svglite::svglite, bg = "white")
+if (grepl("\\.svg$", outfile, ignore.case = TRUE) &&
+    requireNamespace("svglite", quietly = TRUE)) {
+  ggsave(outfile, p, width = 180, height = 120, units = "mm",
+         device = svglite::svglite, bg = "white")
 } else {
   ggsave(outfile, p, width = 180, height = 120, units = "mm", bg = "white")
 }

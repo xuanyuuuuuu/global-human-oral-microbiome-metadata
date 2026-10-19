@@ -35,6 +35,13 @@ scale_y_oral_prop <- function() {
   )
 }
 
+scale_y_oral_count <- function() {
+  scale_y_continuous(
+    labels = comma_format(accuracy = 1),
+    expand = expansion(mult = c(0.05, 0))
+  )
+}
+
 save_oral_fig <- function(p, filename, width = 10, height = 5) {
   dir.create(dirname(filename), showWarnings = FALSE, recursive = TRUE)
   if (grepl("\\.svg$", filename, ignore.case = TRUE) && requireNamespace("svglite", quietly = TRUE)) {

@@ -1,8 +1,15 @@
-args <- commandArgs(trailingOnly = TRUE)
+# ============================================
+# Figure: Cumulative proportion by SDG region
+# ============================================
 
-get_arg <- function(k) {
+if (!exists("args", inherits = FALSE)) {
+  args <- commandArgs(trailingOnly = TRUE)
+}
+
+get_arg <- function(k, default = NULL) {
   i <- which(args == k)
-  if (length(i) == 0 || i == length(args)) stop("missing arg")
+  if (length(i) == 0) return(default)
+  if (i == length(args)) return(default)
   args[i + 1]
 }
 
@@ -10,6 +17,19 @@ biosample_path <- get_arg("--biosample")
 country_path   <- get_arg("--country")
 theme_path     <- get_arg("--theme")
 outfile        <- get_arg("--out")
+
+if (is.null(biosample_path) || is.null(country_path) || is.null(theme_path) || is.null(outfile)) {
+  stop(
+    paste(
+      "Usage:",
+      "Rscript figure1D_sdg_cumulative_proportion.R",
+      "--biosample final_biosample.csv",
+      "--country country_population_group.csv",
+      "--theme oral_theme.R",
+      "--out figure1D_sdg_cumulative_proportion.svg"
+    )
+  )
+}
 
 suppressPackageStartupMessages({
   library(readr)
@@ -25,24 +45,38 @@ source(theme_path)
 bios <- read_csv(biosample_path, show_col_types = FALSE)
 country_info <- read_csv(country_path, show_col_types = FALSE)
 
+required_bios_cols <- c("country_clean", "release_date")
+required_country_cols <- c("country_clean", "SDG_Region")
+
+missing_bios <- setdiff(required_bios_cols, names(bios))
+missing_country <- setdiff(required_country_cols, names(country_info))
+
+if (length(missing_bios) > 0) {
+  stop(paste("Missing columns in biosample file:", paste(missing_bios, collapse = ", ")))
+}
+if (length(missing_country) > 0) {
+  stop(paste("Missing columns in country file:", paste(missing_country, collapse = ", ")))
+}
+
 bios_year <- bios |>
   mutate(
-    date_clean = as.Date(substr(release_date, 1, 10)),
+    country_clean = trimws(as.character(country_clean)),
+    date_clean = as.Date(substr(as.character(release_date), 1, 10)),
     year = year(date_clean)
   ) |>
   select(country_clean, year)
 
 country_sdg <- country_info |>
-  select(country_clean, SDG_Region) |>
   mutate(
-    country_clean = trimws(country_clean),
-    SDG_Region = trimws(SDG_Region)
-  )
+    country_clean = trimws(as.character(country_clean)),
+    SDG_Region = trimws(as.character(SDG_Region))
+  ) |>
+  select(country_clean, SDG_Region)
 
 bios_sdg <- bios_year |>
-  mutate(country_clean = trimws(country_clean)) |>
   left_join(country_sdg, by = "country_clean") |>
   filter(
+    !is.na(year),
     !is.na(SDG_Region),
     !SDG_Region %in% c("Unreported", "(Unreported)")
   )
