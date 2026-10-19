@@ -1,6 +1,5 @@
-# Global-human-oral-microbiome-metadata
 
-## Harmonization workflow 
+## Harmonization 
 
 ### Overview
 
