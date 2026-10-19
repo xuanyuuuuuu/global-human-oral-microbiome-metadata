@@ -1,6 +1,6 @@
 ## Visualization
 
-## 1. Country counts (corresponding to Table 1 in the manuscript)
+### 1. Country counts (corresponding to Table 1 in the manuscript)
 
 Script:
 - country_counts.py
@@ -14,7 +14,7 @@ Output:
 ---
 
 
-## 2. Representation by region and income group (corresponding to Table 2 in the manuscript)
+### 2. Representation by region and income group (corresponding to Table 2 in the manuscript)
 
 Script:
 - region_group_representation.py  
@@ -29,7 +29,7 @@ Output:
 - income_representation.csv 
 
 ---
-## 3. Sampling-type counts (corresponding to Table 3 in the manuscript)
+### 3. Sampling-type counts (corresponding to Table 3 in the manuscript)
 
 Script:
 - sampling_type_counts.py  
@@ -41,7 +41,7 @@ Output:
 - sampling_type_counts.csv
 
 ---
-## 4. Country-level representation (corresponding to Table S6 in the manuscript)
+### 4. Country-level representation (corresponding to Table S6 in the manuscript)
 
 Script:
 - country_representation.py  
@@ -55,7 +55,7 @@ Output:
 - country_representation.csv 
 
 ---
-## 5. Country-level sample map (corresponding to Figure 1A in the manuscript)
+### 5. Country-level sample map (corresponding to Figure 1A in the manuscript)
 
 Script:
 - map_samples.R  
@@ -67,7 +67,7 @@ Output:
 - figure1A_map_samples.svg
 
 ---
-## 6. Country-level representation map (corresponding to Figure 1B in the manuscript)
+### 6. Country-level representation map (corresponding to Figure 1B in the manuscript)
 
 Script:
 - map_representation.R  
@@ -79,7 +79,7 @@ Output:
 - figure1B_map_representation.svg
 
 ---
-## 7. SDG region temporal patterns (corresponding to Figure 1C-D and Figure S2A-B in the manuscript)
+### 7. SDG region temporal patterns (corresponding to Figure 1C-D and Figure S2A-B in the manuscript)
 
 Script:
 - sdg_cumulative_samples.R  
@@ -99,7 +99,7 @@ Output:
 - sdg_yearly_proportion.svg (Figure S2B)
 
 ---
-## 8. Sampling-type patterns (corresponding to Figure 1E-H in the manuscript)
+### 8. Sampling-type patterns (corresponding to Figure 1E-H in the manuscript)
 
 Script:
 - sampling_type_pie.R  
