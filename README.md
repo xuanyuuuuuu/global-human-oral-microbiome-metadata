@@ -38,13 +38,6 @@ This GitHub repository intentionally contains code only. Large raw files, interm
 
 The primary dataset produced by the workflow is `final_biosample.csv`. It is included in the Zenodo archive and is not duplicated in this GitHub repository.
 
-## Reproducibility
-
-Detailed workflow instructions, expected inputs, and outputs are documented separately:
-
-- Data harmonization: [`harmonization/README.md`](harmonization/README.md)
-- Tables and figures: [`visualization/README.md`](visualization/README.md)
-
 ## License
 
 The code in this repository is available under the [MIT License](LICENSE).
